@@ -1,0 +1,2 @@
+user_id: U1, station_id: S2, time_stamp: 12:19:48
+user_id: U2, station_id: S2, time_stamp: 09:30:53
