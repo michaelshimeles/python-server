@@ -23,7 +23,9 @@ def write_to_file(filename, data):
         with open(filename, 'a') as file:
             if is_empty:
                 file.write(data)
-            file.write('\n' + data)
+            else:
+                file.write('\n' + data)
+
         return {
             "status": "Success",
             "message": f"Data written to {filename} successfully."
@@ -73,8 +75,8 @@ def log_error(filename, data):
     with open(filename, 'a') as file:
         if is_empty:
             file.write(data)
-        file.write('\n' + data)
-
+        else:
+            file.write('\n' + data)
     return {
         "status": "Success",
         "message": f"Data written to {filename} successfully."
