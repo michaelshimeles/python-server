@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 import datetime
 
 
-class SwipeRecord:
+class SwipeAction:
     def __init__(self, user_id, station_id, time_stamp):
         self.user_id = user_id
         self.station_id = station_id
@@ -21,9 +21,9 @@ def write_to_file(filename, data):
 
     try:
         with open(filename, 'a') as file:
-            if not is_empty:
-                file.write('\n' + data)
-            file.write(data)
+            if is_empty:
+                file.write(data)
+            file.write('\n' + data)
         return {
             "status": "Success",
             "message": f"Data written to {filename} successfully."
@@ -42,7 +42,7 @@ def read_file(file_path):
         for line in lines:
             try:
                 data = line.strip().split(', ')
-                if len(data) >= 3: 
+                if len(data) >= 3:
                     user_id = data[0].split(': ')[1]
                     station_id = data[1].split(': ')[1]
                     time_stamp_str = data[2].split(': ')[1]
@@ -50,7 +50,7 @@ def read_file(file_path):
                     time_stamp = datetime.datetime.strptime(
                         time_stamp_str, '%H:%M:%S')
 
-                    swipe_record = SwipeRecord(
+                    swipe_record = SwipeAction(
                         user_id, station_id, str(time_stamp))
                     objects.append(swipe_record)
                 else:
@@ -71,9 +71,9 @@ def read_file(file_path):
 def log_error(filename, data):
     is_empty = os.path.getsize(filename) == 0
     with open(filename, 'a') as file:
-        if not is_empty:
-           file.write('\n' + data)
-        file.write(str(data))
+        if is_empty:
+            file.write(data)
+        file.write('\n' + data)
 
     return {
         "status": "Success",
@@ -156,7 +156,9 @@ async def calculate_average_time(start_station_id: str, end_station_id: str):
             )
 
             if matching_swipe_out_record:
-                total_time += datetime.datetime.strptime(matching_swipe_out_record.time_stamp, "%Y-%m-%d %H:%M:%S") - datetime.datetime.strptime(swipe_in_record.time_stamp, "%Y-%m-%d %H:%M:%S")
+                total_time += datetime.datetime.strptime(matching_swipe_out_record.time_stamp, "%Y-%m-%d %H:%M:%S") - \
+                    datetime.datetime.strptime(
+                        swipe_in_record.time_stamp, "%Y-%m-%d %H:%M:%S")
 
         average_time = total_time / len(filtered_swipe_in_records)
 

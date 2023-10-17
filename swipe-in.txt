@@ -1,2 +1,0 @@
-user_id: U1, station_id: S1, time_stamp: 12:18:40
-user_id: U2, station_id: S1, time_stamp: 09:30:38
